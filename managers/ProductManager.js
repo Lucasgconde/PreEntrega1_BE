@@ -14,10 +14,18 @@ export default class ProductManager {
 
   async addProduct(productData) {
     const products = await this.getProducts();
+
+    // ✅ Validación de código repetido
+    const codeExists = products.some(p => p.code === productData.code);
+    if (codeExists) {
+      throw new Error(`Ya existe un producto con el código "${productData.code}".`);
+    }
+
     const newProduct = {
       id: this.generateId(products),
       ...productData,
     };
+
     products.push(newProduct);
     await fs.writeFile(path, JSON.stringify(products, null, 2));
     return newProduct;
@@ -27,6 +35,7 @@ export default class ProductManager {
     const products = await this.getProducts();
     const index = products.findIndex(p => p.id === id);
     if (index === -1) return null;
+
     const updated = { ...products[index], ...updateData, id: products[index].id };
     products[index] = updated;
     await fs.writeFile(path, JSON.stringify(products, null, 2));
@@ -37,11 +46,9 @@ export default class ProductManager {
     const products = await this.getProducts();
     const filtered = products.filter(p => p.id !== id);
     await fs.writeFile(path, JSON.stringify(filtered, null, 2));
-    return true;
   }
 
   generateId(products) {
-    const ids = products.map(p => parseInt(p.id) || 0);
-    return (Math.max(...ids, 0) + 1).toString();
+    return products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
   }
 }
