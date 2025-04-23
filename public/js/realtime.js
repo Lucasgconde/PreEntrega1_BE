@@ -9,7 +9,6 @@ form.addEventListener('submit', e => {
   const formData = new FormData(form);
   const newProduct = Object.fromEntries(formData.entries());
 
-  // Aseguramos que los campos numéricos estén bien
   newProduct.price = parseFloat(newProduct.price);
   newProduct.stock = parseInt(newProduct.stock);
 
@@ -17,7 +16,6 @@ form.addEventListener('submit', e => {
   form.reset();
 });
 
-// Escuchamos actualizaciones de productos
 socket.on('updateProducts', async () => {
   const response = await fetch('/api/products');
   const products = await response.json();

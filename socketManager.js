@@ -5,7 +5,6 @@ export default function socketManager(io) {
   io.on('connection', socket => {
     console.log('🟢 Cliente conectado por WebSocket');
 
-    // Evento: agregar nuevo producto
     socket.on('newProduct', async (data) => {
       try {
         await productManager.addProduct(data);
@@ -16,7 +15,6 @@ export default function socketManager(io) {
       }
     });
 
-    // Evento: eliminar producto (por si después lo usás)
     socket.on('deleteProduct', async (productId) => {
       try {
         await productManager.deleteProduct(productId);

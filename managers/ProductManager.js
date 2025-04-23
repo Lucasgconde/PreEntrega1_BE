@@ -15,7 +15,6 @@ export default class ProductManager {
   async addProduct(productData) {
     const products = await this.getProducts();
 
-    // ✅ Validación de código repetido
     const codeExists = products.some(p => p.code === productData.code);
     if (codeExists) {
       throw new Error(`Ya existe un producto con el código "${productData.code}".`);

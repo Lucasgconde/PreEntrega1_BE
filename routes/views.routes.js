@@ -5,13 +5,11 @@ import path from 'path';
 const router = Router();
 const productManager = new ProductManager();
 
-// Vista estática
 router.get('/home', async (req, res) => {
   const products = await productManager.getProducts();
   res.render('home', { products });
 });
 
-// Vista dinámica con WebSocket
 router.get('/realtimeproducts', async (req, res) => {
   const products = await productManager.getProducts();
   res.render('realTimeProducts', { products });
