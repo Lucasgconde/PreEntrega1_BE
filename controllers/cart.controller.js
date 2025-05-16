@@ -1,22 +1,41 @@
-import CartManager from '../managers/CartManager.js';
-
-const manager = new CartManager();
+import Cart from '../models/Cart.model.js';
 
 export const createCart = async (req, res) => {
-  const newCart = await manager.createCart();
-  res.status(201).json(newCart);
+  try {
+    const newCart = await Cart.create({ products: [] });
+    res.status(201).json({ status: 'success', payload: newCart });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
 };
 
 export const getCartById = async (req, res) => {
-  const { cid } = req.params;
-  const cart = await manager.getCartById(cid);
-  if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
-  res.json(cart);
+  try {
+    const cart = await Cart.findById(req.params.cid).populate('products.product');
+    if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
+    res.json({ status: 'success', payload: cart });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
 };
 
 export const addProductToCart = async (req, res) => {
-  const { cid, pid } = req.params;
-  const cart = await manager.addProductToCart(cid, pid);
-  if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
-  res.json(cart);
+  try {
+    const { cid, pid } = req.params;
+    const cart = await Cart.findById(cid);
+    if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
+
+    const existing = cart.products.find(p => p.product.toString() === pid);
+
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.products.push({ product: pid });
+    }
+
+    await cart.save();
+    res.json({ status: 'success', payload: cart });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
 };

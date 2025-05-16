@@ -1,0 +1,32 @@
+<h2>{{title}}</h2>
+
+<div style="margin-bottom: 10px;">
+  <strong>Descripción:</strong>
+  <p>{{description}}</p>
+</div>
+
+<div style="margin-bottom: 10px;">
+  <strong>Precio:</strong>
+  <span style="color: green; font-weight: bold;">${{price}}</span>
+</div>
+
+<div style="margin-bottom: 10px;">
+  <strong>Categoría:</strong> {{category}}
+</div>
+
+<div style="margin-bottom: 10px;">
+  <strong>Stock:</strong> 
+  {{#if stock}}
+    {{stock}}
+  {{else}}
+    <span style="color: red;">No hay stock</span>
+  {{/if}}
+</div>
+
+<form action="/api/carts/{{cartId}}/products/{{_id}}" method="POST" style="margin-bottom: 15px;">
+  <button type="submit" style="padding: 8px 16px; background-color: #007bff; border: none; color: white; cursor: pointer;">
+    Agregar al carrito
+  </button>
+</form>
+
+<a href="/products" style="color: #555;">← Volver al listado</a>

@@ -1,3 +1,5 @@
+import connectMongo from './config/mongo.js';
+connectMongo();
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -7,7 +9,7 @@ import { fileURLToPath } from 'url';
 
 import productRoutes from './routes/product.routes.js';
 import cartRoutes from './routes/cart.routes.js';
-import viewsRouter from './routes/views.router.js';
+import viewsRouter from './routes/views.routes.js';
 import socketManager from './socketManager.js';
 
 const __filename = fileURLToPath(import.meta.url);

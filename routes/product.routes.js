@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  getAllProducts,
+  getProducts,
   getProductById,
   createProduct,
   updateProduct,
@@ -9,7 +9,7 @@ import {
 
 const router = Router();
 
-router.get('/', getAllProducts);
+router.get('/', getProducts);
 router.get('/:pid', getProductById);
 router.post('/', createProduct);
 router.put('/:pid', updateProduct);
