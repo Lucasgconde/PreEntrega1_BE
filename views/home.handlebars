@@ -1,9 +1,33 @@
 <h1>Productos</h1>
-<ul>
+
+<a href="/carts/6826a229795d39a142f5f962" style="display: inline-block; margin-bottom: 20px; padding: 8px 16px; background-color: #28a745; color: white; text-decoration: none; border-radius: 4px;">
+  Ver carrito 🛒
+</a>
+
+<ul style="list-style: none; padding: 0;">
   {{#each products}}
-    <li>
-      <strong>{{title}}</strong> - ${{price}}
+    <li style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+      <h3>{{title}}</h3>
+      <p><strong>Precio:</strong> ${{price}}</p>
+
+      <form method="POST" action="/api/carts/6826a229795d39a142f5f962/products/{{_id}}?_method=PUT" style="display: inline-block; margin-right: 10px;">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" style="padding: 6px 10px;">Agregar al carrito</button>
+      </form>
+
       <a href="/products/{{_id}}">Ver más</a>
     </li>
   {{/each}}
 </ul>
+
+<div style="margin-top: 20px;">
+  {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}&limit=10">← Página anterior</a>
+  {{/if}}
+
+  <span style="margin: 0 10px;">Página {{currentPage}}</span>
+
+  {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}&limit=10">Página siguiente →</a>
+  {{/if}}
+</div>

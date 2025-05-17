@@ -3,9 +3,11 @@ connectMongo();
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { engine } from 'express-handlebars';
+import Handlebars from 'express-handlebars';
+import helpers from './handlebars.helpers.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import methodOverride from 'method-override';
 
 import productRoutes from './routes/product.routes.js';
 import cartRoutes from './routes/cart.routes.js';
@@ -22,19 +24,17 @@ socketManager(io);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Handlebars
-app.engine('handlebars', engine());
+app.engine('handlebars', Handlebars.engine({ helpers }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-// Routes
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/', viewsRouter);
 
-// Server
 const PORT = 8080;
 httpServer.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);

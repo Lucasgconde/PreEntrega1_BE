@@ -1,101 +1,129 @@
-# 🏍️ Preentrega 2 - Backend con Websockets y Handlebars (Coderhouse)
+# 🚀 Entrega Final - Backend con MongoDB, Handlebars y Websockets
 
-Este proyecto es una API REST construida con **Node.js**, **Express**, **Handlebars** y **Socket.IO**, que permite gestionar productos y carritos de compra. Incluye vistas dinámicas en tiempo real mediante WebSockets.
+Proyecto de Backend desarrollado como entrega final del curso de **Backend en Coderhouse**, con persistencia en **MongoDB**, vistas con **Handlebars**, y funcionalidades en tiempo real mediante **WebSockets**.
 
 ---
 
-## 🚀 Cómo iniciar el proyecto
+## ✅ Funcionalidades principales
 
-1. Clonar el repositorio.
-2. Instalar dependencias:
+- Gestión de productos con filtros, paginación y ordenamiento dinámico
+- Gestión completa de carritos con operaciones CRUD
+- Vistas dinámicas con Handlebars
+- Websockets para actualización en tiempo real de productos
+- Persistencia de datos con MongoDB
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- Handlebars
+- Socket.IO
+- JavaScript (ESM)
+- CSS básico (opcional para estilos)
+
+---
+
+## 🧪 Cómo ejecutar el proyecto
+
+1. Cloná este repositorio
+2. Instalá las dependencias con:
 
 ```bash
 npm install
 ```
 
-3. Iniciar el servidor:
+3. Iniciá el servidor:
 
 ```bash
 npm start
 ```
 
-El servidor se ejecuta en `http://localhost:8080`
-
-> ⚠️ Asegurate de tener los archivos `products.json` y `carts.json` en la carpeta `/data`, ambos con `[]` como contenido inicial.
+4. Verificá que MongoDB esté corriendo localmente en `mongodb://localhost:27017/ecommerce`
 
 ---
 
-## 💻 Vistas con Handlebars
+## 📂 Rutas principales
 
-| Ruta | Vista                   | Descripción                                          |
-|------|--------------------------|------------------------------------------------------|
-| `/home` | `home.handlebars`         | Muestra una tabla estática con todos los productos  |
-| `/realtimeproducts` | `realTimeProducts.handlebars` | Muestra una lista dinámica que se actualiza por WebSocket |
+### 🔹 Productos (`/api/products`)
 
-La vista `/realtimeproducts` incluye un formulario para agregar productos en tiempo real, que se actualiza automáticamente para todos los usuarios conectados.
-
----
-
-## 📡 WebSocket (Socket.IO)
-
-Se implementó un servidor WebSocket que:
-
-- Escucha eventos `newProduct` y `deleteProduct`
-- Actualiza la lista de productos en vivo mediante `io.emit('updateProducts')`
-- Todo se gestiona en el archivo `socketManager.js`
+| Método | Ruta                | Descripción                                          |
+|--------|---------------------|------------------------------------------------------|
+| GET    | `/`                 | Lista de productos con paginación, filtros y orden  |
+| GET    | `/:pid`             | Detalle de producto por ID                          |
+| POST   | `/`                 | Crea un nuevo producto                              |
+| PUT    | `/:pid`             | Actualiza un producto existente                     |
+| DELETE | `/:pid`             | Elimina un producto                                 |
 
 ---
 
-## 📦 Rutas de Productos `/api/products`
+### 🔹 Carritos (`/api/carts`)
 
-| Método | Ruta      | Descripción                                |
-|--------|-----------|--------------------------------------------|
-| GET    | `/`       | Lista todos los productos                  |
-| GET    | `/:pid`   | Muestra un producto por ID                 |
-| POST   | `/`       | Crea un nuevo producto                     |
-| PUT    | `/:pid`   | Actualiza un producto (sin modificar id)   |
-| DELETE | `/:pid`   | Elimina un producto                        |
-
----
-
-## 🛒 Rutas de Carritos `/api/carts`
-
-| Método | Ruta                                      | Descripción                                     |
-|--------|-------------------------------------------|-------------------------------------------------|
-| POST   | `/`                                       | Crea un carrito vacío                           |
-| GET    | `/:cid`                                   | Lista los productos del carrito                 |
-| POST   | `/:cid/product/:pid`                      | Agrega un producto al carrito (o suma cantidad) |
+| Método | Ruta                                       | Descripción                                      |
+|--------|--------------------------------------------|--------------------------------------------------|
+| POST   | `/`                                        | Crea un nuevo carrito vacío                      |
+| GET    | `/:cid`                                    | Lista productos del carrito                      |
+| POST   | `/:cid/product/:pid`                       | Agrega un producto al carrito                    |
+| DELETE | `/:cid/products/:pid`                      | Elimina un producto del carrito                  |
+| PUT    | `/:cid`                                    | Reemplaza todos los productos del carrito        |
+| PUT    | `/:cid/products/:pid`                      | Actualiza la cantidad de un producto específico  |
+| DELETE | `/:cid`                                    | Vacía completamente el carrito                   |
 
 ---
 
-## 💾 Persistencia
+## 🖼️ Vistas con Handlebars
 
-Los datos se guardan en archivos `.json` dentro de `/data`:
-- `products.json`
-- `carts.json`
-
-Gestionados a través de `ProductManager.js` y `CartManager.js` con `fs.promises`.
+| Ruta               | Descripción                                                                 |
+|--------------------|-----------------------------------------------------------------------------|
+| `/products`        | Muestra todos los productos con paginación y opción de ver detalle o agregar |
+| `/products/:pid`   | Muestra detalle del producto con botón de agregar al carrito                |
+| `/carts/:cid`      | Muestra el carrito con todos los productos agregados                        |
+| `/realtimeproducts`| Vista con actualización en tiempo real usando WebSocket                     |
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🔁 Websockets
+
+- Ruta activa: `/realtimeproducts`
+- Permite agregar productos en tiempo real
+- Emite y recibe eventos mediante `socket.io`
+
+---
+
+## 📁 Estructura del proyecto
 
 ```
-📆 preentrega-2
-💁 controllers/
-🕛 data/
-🧰 managers/
-📊 public/
-└── js/
-📚 routes/
-📖 views/
-└── layouts/
-server.js
-socketManager.js
-README.md
+📦 preentrega
+├── config/
+│   └── mongo.js
+├── controllers/
+│   ├── cart.controller.js
+│   └── product.controller.js
+├── models/
+│   ├── Cart.model.js
+│   └── Product.model.js
+├── routes/
+│   ├── cart.routes.js
+│   ├── product.routes.js
+│   └── views.routes.js
+├── views/
+│   ├── layouts/
+│   │   └── main.handlebars
+│   ├── home.handlebars
+│   ├── productDetail.handlebars
+│   ├── cartDetail.handlebars
+│   └── realTimeProducts.handlebars
+├── public/
+├── socketManager.js
+├── server.js
+└── README.md
 ```
 
 ---
 
 ## 👨‍💻 Autor
-Hecho por **Conde Lucas** - Estudiante de Coderhouse.
+
+Desarrollado por **Conde Lucas**  
+Entrega Final - Curso Backend - **Coderhouse**
